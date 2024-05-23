@@ -1,0 +1,32 @@
+name: Handle git versioning
+
+on:
+  workflow_call:
+    outputs:
+      version:
+        description: "The new version"
+        value: ${{ jobs.version.outputs.version }}
+      previous-version:
+        description: "The previous version"
+        value: ${{ jobs.version.outputs.previous-version }}
+  
+jobs:
+  version:
+    runs-on: ubuntu-20.04
+    outputs:
+      version:  ${{ steps.git-version.outputs.version }}  # 
+      previous-version: ${{ steps.git-version.outputs.previous-version }}
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.head_ref }}   # checkout the correct branch name
+        fetch-depth: 0                # fetch the whole repo history
+
+    - name: Git Version
+      id: git-version
+      uses: codacy/git-version@2.7.1
+      with:
+        release-branch: main
+
+

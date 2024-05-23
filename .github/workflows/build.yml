@@ -1,0 +1,19 @@
+on:
+    workflow_dispatch:
+
+jobs:
+    get-version:
+        uses: ./.github/workflows/version.yml
+
+    build:
+        needs:
+            - get-version
+        runs-on: ubuntu-22.04
+        steps:
+            - uses: actions/checkout@v4
+            - name: Hello world
+              run: echo "Hello world"
+            - name: "Show versions:"
+              run: | 
+                echo "New Version: ${{ needs.get-version.outputs.version }}"
+                echo "Previous Version: ${{ needs.get-version.outputs.previous-version }}"

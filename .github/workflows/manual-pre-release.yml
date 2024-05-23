@@ -34,6 +34,7 @@ jobs:
             - name: Generate tag and body
               id: generate-tag-and-body
               run: |
+                set -x
                 echo "Generating tag and body"
                 if [ "${{ needs.check-for-pr.outputs.has_pull_request }}" == "true" ]; then
                     echo "tag=pr-${{ needs.get-version.outputs.version }}" >> $GITHUB_OUTPUT
@@ -42,8 +43,6 @@ jobs:
                     echo "tag=dev-${{ needs.get-version.outputs.version }}" >> $GITHUB_OUTPUT
                     echo "body=Pre-release from branch ${{ github.ref_name || github.head_ref }}" >> $GITHUB_OUTPUT
                 fi
-                echo "tag=dev-${{ needs.get-version.outputs.version }}" >> $GITHUB_OUTPUT
-                echo "body=Pre-release from branch ${{ github.ref_name || github.head_ref }}" >> $GITHUB_OUTPUT
 
             - name: Bump version and push tag
               id: tag_version

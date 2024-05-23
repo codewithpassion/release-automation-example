@@ -17,8 +17,14 @@ jobs:
         runs-on: ubuntu-latest
         needs:
             - get-version
+        env:
+            release-tag: dev-${{ needs.get-version.outputs.version }}
+            release-body: |
+                Pre-release from branch ${{ github.ref_name || github.head_ref }}
         outputs:
             release-id: ${{ steps.create-pre-release.outputs.id }}
+            release-tag: ${{ env.release-tag }}
+            release-body: ${{ env.release-body }}
         steps:
             - uses: actions/checkout@v4
 
@@ -35,18 +41,19 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                tag: dev-${{ needs.get-version.outputs.version }} 
+                tag: ${{ env.release-tag }}
                 name: "[DEV-${{ github.ref_name || github.head_ref }}] ${{ needs.get-version.outputs.version }}"
                 prerelease: true
-                body: |
-                  Pre-release from branch ${{ github.ref_name || github.head_ref }}
-
+                body: ${{ env.release-body }}
+                  
     execute-pre-release:
       needs:
         - create-pre-release
         - get-version
       uses: ./.github/workflows/build-on-pre-release.yml
+      # We need to call the above workflow through a workflow_call as a 'on: release' event is not executed if the release
+      # is created from a workflow unless a Personal GITHUB token is used.
       with:
-          release-tag: dev-${{ needs.get-version.outputs.version }}
-          release-body: "Pre-release from branch ${{ github.ref_name || github.head_ref }}"
+          release-tag: ${{ needs.create-pre-release.outputs.release-tag }}
+          release-body: ${{ needs.create-pre-release.outputs.release-body }}
           release-id: ${{ needs.create-pre-release.outputs.release-id }}

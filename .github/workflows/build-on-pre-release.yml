@@ -1,7 +1,22 @@
 name: Build on Pre-Release
 
 on:
-  release:
+  workflow_call:
+    inputs:
+      release-tag:
+        description: "The tag for this release"
+        required: true
+        type: string
+      release-body:
+        description: "The body for this release"
+        required: true
+        type: string
+      release-id:
+        description: "The id for this release"
+        required: true
+        type: string
+
+  # release:
     # types: [prereleased]
 
 jobs:
@@ -10,6 +25,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.release-tag }}
+        fetch-depth: 0
 
     - name: Debug
       run: |
@@ -25,8 +43,8 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const releaseId = ${{ github.event.release.id }};
-          const existingBody = '${{ github.event.release.body }}';
+          const releaseId = ${{ inputs.release-id }};
+          const existingBody = '${{ inputs.release-body }}';
           const updatedBody = `${existingBody}\n\nReleased`;
           
           await github.rest.repos.updateRelease({

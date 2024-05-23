@@ -28,6 +28,7 @@ jobs:
                 custom_tag: dev-${{ needs.get-version.outputs.version }}
 
             - name: Create Pre-Release
+              id: create-pre-release
               uses: ncipollo/release-action@v1
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -37,3 +38,10 @@ jobs:
                 prerelease: true
                 body: |
                   Pre-release from branch ${{ github.ref_name || github.head_ref }}
+
+            - name: Execute build
+              uses: ./.github/workflows/build-on-pre-release.yml
+              with:
+                  release-tag: dev-${{ needs.get-version.outputs.version }}
+                  release-body: "Pre-release from branch ${{ github.ref_name || github.head_ref }}"
+                  release-id: ${{ steps.create-pre-release.outputs.id }}

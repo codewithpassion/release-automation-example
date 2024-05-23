@@ -74,4 +74,4 @@ jobs:
           release-tag: ${{ needs.create-pre-release.outputs.release-tag }}
           release-body: ${{ needs.create-pre-release.outputs.release-body }}
           release-id: ${{ needs.create-pre-release.outputs.release-id }}
-          is-pr: ${{ needs.check-for-pr.outputs.has_pull_request }}
+          is-pr: ${{ fromJson(needs.check-for-pr.outputs.has_pull_request) }}

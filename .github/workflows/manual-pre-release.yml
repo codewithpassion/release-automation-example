@@ -3,6 +3,9 @@ name: Manual Pre-Release
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
     get-version:
         uses: ./.github/workflows/version.yml
@@ -23,8 +26,6 @@ jobs:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
                 tag_name: ${{ needs.get-version.outputs.version }}
-                release_name: Pre-Release ${{ needs.get-version.outputs.version }}
+                release_name: "[DEV-${{ github.ref_name || github.head_ref }}] ${{ needs.get-version.outputs.version }}"
                 body: |
-                  Pre-release from branch ${{ github.event.inputs.branch }}
-                  draft: false
-                  prerelease: true
+                  Pre-release from branch ${{ github.ref_name || github.head_ref }}

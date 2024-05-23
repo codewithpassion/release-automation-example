@@ -17,6 +17,8 @@ jobs:
         runs-on: ubuntu-latest
         needs:
             - get-version
+        outputs:
+            release-id: ${{ steps.create-pre-release.outputs.id }}
         steps:
             - uses: actions/checkout@v4
 
@@ -39,9 +41,12 @@ jobs:
                 body: |
                   Pre-release from branch ${{ github.ref_name || github.head_ref }}
 
-            - name: Execute build
-              uses: ./.github/workflows/build-on-pre-release.yml
-              with:
-                  release-tag: dev-${{ needs.get-version.outputs.version }}
-                  release-body: "Pre-release from branch ${{ github.ref_name || github.head_ref }}"
-                  release-id: ${{ steps.create-pre-release.outputs.id }}
+    execute-pre-release:
+      needs:
+        - create-pre-release
+        - get-version
+      uses: ./.github/workflows/build-on-pre-release.yml
+      with:
+          release-tag: dev-${{ needs.get-version.outputs.version }}
+          release-body: "Pre-release from branch ${{ github.ref_name || github.head_ref }}"
+          release-id: ${{ needs.create-pre-release.outputs.release-id }}

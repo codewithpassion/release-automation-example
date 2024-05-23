@@ -34,5 +34,5 @@ jobs:
 
     - name: Print pull request status
       run: |
-        echo "Has Pull Request: ${{ env.has_pull_request }}"
-        echo "Pull Request Number: ${{ env.pull_request_number }}"
+        echo "Has Pull Request: ${{ steps.check_pr.outputs.has_pull_request }}"
+        echo "Pull Request Number: ${{ steps.check_pr.outputs.pull_request_number }}"

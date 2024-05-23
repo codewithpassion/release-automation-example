@@ -1,0 +1,40 @@
+name: Check Pull Request
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check_pull_request:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check for pull request
+      id: check_pr
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const branch = '${{ github.ref_name || github.head_ref }}';
+          const pulls = await github.rest.pulls.list({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'open',
+            head: `${context.repo.owner}:${branch}`,
+          });
+
+          if (pulls.data.length > 0) {
+            core.setEnv('has_pull_request', 'true');
+            core.setOutput('has_pull_request', 'true');
+            core.setEnv('pull_request_number', pulls.data[0].number);
+            core.setOutput('pull_request_number', pulls.data[0].number);
+
+            console.log(`Pull request #${pulls.data[0].number} found for branch ${branch}`);
+          } else {
+            core.setOutput('has_pull_request', 'false');
+            console.log(`No pull request found for branch ${branch}`);
+          }
+
+    - name: Print pull request status
+      run: |
+        echo "Has Pull Request: ${{ env.has_pull_request }}"
+        echo "Pull Request Number: ${{ env.pull_request_number }}"

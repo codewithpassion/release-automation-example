@@ -2,10 +2,11 @@ name: Build on Pre-Release
 
 on:
   release:
-    types: [prereleased]
+    types: [published]
 
 jobs:
   build:
+    if: 'github.event.prerelease'
     runs-on: ubuntu-latest
 
     steps:
@@ -15,17 +16,19 @@ jobs:
       run: |
         echo "Running ./ops/scripts/build.sh"
 
-    - name: Add tag to release
+
+    - name: Update release body
       uses: actions/github-script@v6
       with:
-         github-token: ${{ secrets.GITHUB_TOKEN }}
-         script: |
-           const releaseId = ${{ github.event.release.id }};
-           const newTag = 'built';
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const releaseId = ${{ github.event.release.id }};
+          const existingBody = '${{ github.event.release.body }}';
+          const updatedBody = `${existingBody}\n\nReleased`;
           
-           await github.rest.repos.createReleaseTag({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               release_id: releaseId,
-               tag: newTag,
-           });        
+          await github.rest.repos.updateRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            release_id: releaseId,
+            body: updatedBody,
+          });

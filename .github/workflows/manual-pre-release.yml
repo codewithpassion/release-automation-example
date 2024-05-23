@@ -12,11 +12,17 @@ jobs:
         with:
             release-branch: "main"
             prefix: "v"
+
+    check-for-pr:
+        uses: ./.github/workflows/check-for-pull-request.yml
+        with:
+            ref_name: ${{ github.ref_name || github.head_ref }}
     
     create-pre-release:
         runs-on: ubuntu-latest
         needs:
             - get-version
+            - check-for-pr
         outputs:
             release-id: ${{ steps.create-pre-release.outputs.id }}
             release-tag: ${{ steps.generate-tag-and-body.outputs.tag }}
@@ -29,6 +35,13 @@ jobs:
               id: generate-tag-and-body
               run: |
                 echo "Generating tag and body"
+                if [ "${{ needs.check-for-pr.outputs.has_pull_request }}" == "true" ]; then
+                    echo "tag=pr-${{ needs.get-version.outputs.version }}" >> $GITHUB_OUTPUT
+                    echo "body=Pre-release from PR ${{ github.ref_name || github.head_ref }}" >> $GITHUB_OUTPUT
+                else
+                    echo "tag=dev-${{ needs.get-version.outputs.version }}" >> $GITHUB_OUTPUT
+                    echo "body=Pre-release from branch ${{ github.ref_name || github.head_ref }}" >> $GITHUB_OUTPUT
+                fi
                 echo "tag=dev-${{ needs.get-version.outputs.version }}" >> $GITHUB_OUTPUT
                 echo "body=Pre-release from branch ${{ github.ref_name || github.head_ref }}" >> $GITHUB_OUTPUT
 
@@ -61,3 +74,4 @@ jobs:
           release-tag: ${{ needs.create-pre-release.outputs.release-tag }}
           release-body: ${{ needs.create-pre-release.outputs.release-body }}
           release-id: ${{ needs.create-pre-release.outputs.release-id }}
+          is-pr: ${{ needs.check-for-pr.outputs.has_pull_request }}

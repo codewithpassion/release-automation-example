@@ -15,6 +15,11 @@ on:
         description: "The id for this release"
         required: true
         type: string
+      is-pr:
+        description: "Whether this is a PR release"
+        required: false
+        default: false
+        type: boolean
 
   # release:
     # types: [prereleased]

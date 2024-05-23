@@ -2,6 +2,19 @@ name: Check Pull Request
 
 on:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref_name:
+        description: "The branch name to check for pull request"
+        required: true
+        type: string
+    outputs:
+      has_pull_request:
+        description: "Whether a pull request exists for the branch"
+        value: ${{ jobs.check_pull_request.outputs.has_pull_request }}
+      pull_request_number:
+        description: "The number of the pull request"
+        value: ${{ jobs.check_pull_request.outputs.pull_request_number }}
 
 jobs:
   check_pull_request:
@@ -14,7 +27,7 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const branch = '${{ github.ref_name || github.head_ref }}';
+          const branch = '${{ inputs.ref_name || github.ref_name || github.head_ref }}';
           const pulls = await github.rest.pulls.list({
             owner: context.repo.owner,
             repo: context.repo.repo,

@@ -1,10 +1,10 @@
 on:
     workflow_dispatch:
-    push:
-        branches:
-            - main
-            - feature/*
-            - release/*
+    # push:
+    #     branches:
+    #         - main
+    #         - feature/*
+    #         - release/*
 
 jobs:
     get-version:

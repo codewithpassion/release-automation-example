@@ -19,6 +19,9 @@ on:
 jobs:
   check_pull_request:
     runs-on: ubuntu-latest
+    outputs:
+      has_pull_request: ${{ steps.check_pr.outputs.has_pull_request }}
+      pull_request_number: ${{ steps.check_pr.outputs.pull_request_number }}
 
     steps:
     - name: Check for pull request

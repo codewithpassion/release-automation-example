@@ -1,0 +1,31 @@
+name: Build on Pre-Release
+
+on:
+  release:
+    types: [prereleased]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Run build script
+      run: |
+        echo "Running ./ops/scripts/build.sh"
+
+    - name: Add tag to release
+      uses: actions/github-script@v6
+      with:
+         github-token: ${{ secrets.GITHUB_TOKEN }}
+         script: |
+           const releaseId = ${{ github.event.release.id }};
+           const newTag = 'built';
+          
+           await github.rest.repos.createReleaseTag({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               release_id: releaseId,
+               tag: newTag,
+           });        

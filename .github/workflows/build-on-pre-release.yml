@@ -2,10 +2,11 @@ name: Build on Pre-Release
 
 on:
   release:
-    types: [prereleased]
+    types: [published]
 
 jobs:
   build:
+    if: 'github.event.prerelease'
     runs-on: ubuntu-latest
 
     steps:

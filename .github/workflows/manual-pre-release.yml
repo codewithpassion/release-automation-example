@@ -3,8 +3,8 @@ name: Manual Pre-Release
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
+permissions: write-all
+#   contents: write
 
 jobs:
     get-version:

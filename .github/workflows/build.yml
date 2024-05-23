@@ -1,9 +1,17 @@
 on:
     workflow_dispatch:
+    push:
+        branches:
+            - main
+            - feature/*
+            - release/*
 
 jobs:
     get-version:
         uses: ./.github/workflows/version.yml
+        with:
+            release-branch: "main"
+            prefix: "v"
 
     build:
         needs:
@@ -11,6 +19,9 @@ jobs:
         runs-on: ubuntu-22.04
         steps:
             - uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+
             - name: Hello world
               run: echo "Hello world"
             - name: "Show versions:"

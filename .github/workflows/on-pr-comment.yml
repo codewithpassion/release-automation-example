@@ -10,22 +10,18 @@ jobs:
     if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          set -x
-          echo A comment on PR $NUMBER: $COMMENT
-          if [ "$COMMENT" = "release" ]; then
-            echo "create_release=true" >> $GITHUB_OUTPUT
-          else
-            echo "create_release=false" >> $GITHUB_OUTPUT
-          fi
-          echo '${{ toJson(github.event) }}'
-        env:
-          NUMBER: ${{ github.event.issue.number }}
-          COMMENT: ${{ github.event.comment.body }}
+      - id: check-release-comment
+        name: Check for release comment
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const comment = '${{ github.event.comment.body }}';
+            core.setOutput('create_release', comment === 'release');
 
       - name: Add reaction to release
         uses: actions/github-script@v6
-        if: steps.pr_commented.outputs.create_release == 'true'
+        if: steps.check-release-comment.outputs.create_release == 'true'
         env:
           COMMENT_ID: ${{ github.event.comment.id }}
         with:

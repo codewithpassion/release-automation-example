@@ -3,6 +3,10 @@ on:
         types: 
             - created
 
+permissions:
+    contents: read
+    issues: write
+
 jobs:
   pr_commented:
     # This job only runs for pull request comments

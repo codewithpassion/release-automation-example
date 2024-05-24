@@ -38,6 +38,10 @@ jobs:
       run: |
         echo "Release: ${{ toJson(github.event) }}"
 
+    - name: Debug
+      run: |
+        echo "Release: ${{ toJson(github.event) }}"
+
     - name: Run build script
       run: |
         echo "Running ./ops/scripts/build.sh"

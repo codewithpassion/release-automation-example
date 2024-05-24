@@ -13,7 +13,7 @@ jobs:
       - run: |
           set -x
           echo A comment on PR $NUMBER: $COMMENT
-          if [ "$COMMENT" == "release" ]; then
+          if [ "$COMMENT" = "release" ]; then
             echo "create_release=true" >> $GITHUB_OUTPUT
           else
             echo "create_release=false" >> $GITHUB_OUTPUT

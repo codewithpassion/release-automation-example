@@ -18,7 +18,7 @@ jobs:
           else
             echo "create_release=false" >> $GITHUB_OUTPUT
           fi
-          echo ${{ toJson(github.event) }}
+          echo '${{ toJson(github.event) }}'
         env:
           NUMBER: ${{ github.event.issue.number }}
           COMMENT: ${{ github.event.comment.body }}

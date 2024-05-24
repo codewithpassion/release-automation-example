@@ -11,12 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo A comment on PR $NUMBER
+          set -x
+          echo A comment on PR $NUMBER: $COMMENT
           if [ "$COMMENT" == "release" ]; then
             echo "create_release=true" >> $GITHUB_OUTPUT
           else
             echo "create_release=false" >> $GITHUB_OUTPUT
           fi
+          echo ${{ toJson(github.event) }}
         env:
           NUMBER: ${{ github.event.issue.number }}
           COMMENT: ${{ github.event.comment.body }}

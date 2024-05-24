@@ -9,5 +9,29 @@ jobs:
     steps:
       - run: |
           echo A comment on PR $NUMBER
+          if [ "$COMMENT" == "release" ]; then
+            echo "create_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "create_release=false" >> $GITHUB_OUTPUT
+          fi
         env:
           NUMBER: ${{ github.event.issue.number }}
+          COMMENT: ${{ github.event.comment.body }}
+
+      - name: Add reaction to release
+        uses: actions/github-script@v6
+        if: steps.pr_commented.outputs.create_release == 'true'
+        env:
+          COMMENT_ID: ${{ github.event.comment.id }}
+        with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            script: |
+              const commentId = ${{ env.COMMENT_ID }};
+              const reactionContent = 'rocket'; // You can change this to any valid reaction type
+            
+              await github.rest.reactions.createForComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: commentId,
+                content: reactionContent,
+              });          

@@ -12,7 +12,7 @@ jobs:
   pr_commented:
     # This job only runs for pull request comments
     name: PR comment
-    if: ${{ github.event.issue.pull_request }}
+    if: ${{ github.event.issue.pull_request }} && ${{ github.event.issue.state == 'open' }}
     runs-on: ubuntu-latest
     steps:
       - id: check-release-comment

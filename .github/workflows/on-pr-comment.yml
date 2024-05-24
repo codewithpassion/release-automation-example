@@ -30,7 +30,7 @@ jobs:
               const commentId = ${{ env.COMMENT_ID }};
               const reactionContent = 'rocket'; // You can change this to any valid reaction type
             
-              await github.rest.reactions.createForComment({
+              await github.rest.reactions.createForIssueComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 comment_id: commentId,

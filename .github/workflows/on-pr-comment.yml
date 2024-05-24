@@ -3,9 +3,10 @@ on:
         types: 
             - created
 
-permissions:
-    contents: read
-    issues: write
+permissions: write-all
+    # contents: read
+    # issues: write
+
 
 jobs:
   pr_commented:

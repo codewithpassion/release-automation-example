@@ -40,11 +40,11 @@ jobs:
                 if [ "${{ needs.check-for-pr.outputs.has_pull_request }}" == "true" ]; then
                     echo "tag=pr-${{ needs.get-version.outputs.version }}" >> $GITHUB_OUTPUT
                     echo "body=Pre-release from PR ${{ github.ref_name || github.head_ref }}" >> $GITHUB_OUTPUT
-                    echo "name=[STAGING-${{ github.ref_name || github.head_ref }}] ${{ needs.get-version.outputs.version }}"
+                    echo "name=[STAGING-${{ github.ref_name || github.head_ref }}] ${{ needs.get-version.outputs.version }}" >> $GITHUB_OUTPUT
                 else
                     echo "tag=dev-${{ needs.get-version.outputs.version }}" >> $GITHUB_OUTPUT
                     echo "body=Pre-release from branch ${{ github.ref_name || github.head_ref }}" >> $GITHUB_OUTPUT
-                    echo "name=[DEV-${{ github.ref_name || github.head_ref }}] ${{ needs.get-version.outputs.version }}"
+                    echo "name=[DEV-${{ github.ref_name || github.head_ref }}] ${{ needs.get-version.outputs.version }}" >> $GITHUB_OUTPUT
                 fi
 
             - name: Bump version and push tag

@@ -58,3 +58,18 @@ jobs:
             release_id: releaseId,
             body: updatedBody,
           });
+
+    - name: Add reaction to release
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const releaseId = ${{ inputs.release-id }};
+          const reactionContent = 'rocket'; // You can change this to any valid reaction type
+          
+          await github.rest.reactions.createForRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            release_id: releaseId,
+            content: reactionContent,
+          });          

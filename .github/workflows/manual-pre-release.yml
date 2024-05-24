@@ -25,23 +25,26 @@ jobs:
             - check-for-pr
         outputs:
             release-id: ${{ steps.create-pre-release.outputs.id }}
-            release-tag: ${{ steps.generate-tag-and-body.outputs.tag }}
-            release-body: ${{ steps.generate-tag-and-body.outputs.body }}                
+            release-tag: ${{ steps.generate-properties.outputs.tag }}
+            release-body: ${{ steps.generate-properties.outputs.body }}
+            release-name: ${{ steps.generate-properties.outputs.name }}  
 
         steps:
             - uses: actions/checkout@v4
 
-            - name: Generate tag and body
-              id: generate-tag-and-body
+            - name: Generate properties
+              id: generate-properties
               run: |
                 set -x
                 echo "Generating tag and body"
                 if [ "${{ needs.check-for-pr.outputs.has_pull_request }}" == "true" ]; then
                     echo "tag=pr-${{ needs.get-version.outputs.version }}" >> $GITHUB_OUTPUT
                     echo "body=Pre-release from PR ${{ github.ref_name || github.head_ref }}" >> $GITHUB_OUTPUT
+                    echo "name=[STAGING-${{ github.ref_name || github.head_ref }}] ${{ needs.get-version.outputs.version }}"
                 else
                     echo "tag=dev-${{ needs.get-version.outputs.version }}" >> $GITHUB_OUTPUT
                     echo "body=Pre-release from branch ${{ github.ref_name || github.head_ref }}" >> $GITHUB_OUTPUT
+                    echo "name=[DEV-${{ github.ref_name || github.head_ref }}] ${{ needs.get-version.outputs.version }}"
                 fi
 
             - name: Bump version and push tag
@@ -49,7 +52,7 @@ jobs:
               uses: mathieudutour/github-tag-action@v6.2
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
-                custom_tag: ${{ steps.generate-tag-and-body.outputs.tag }}
+                custom_tag: ${{ steps.generate-properties.outputs.tag }}
 
             - name: Create Pre-Release
               id: create-pre-release
@@ -57,10 +60,10 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                tag: ${{ steps.generate-tag-and-body.outputs.tag }}
-                name: "[DEV-${{ github.ref_name || github.head_ref }}] ${{ needs.get-version.outputs.version }}"
+                tag: ${{ steps.generate-properties.outputs.tag }}
+                name: "[${{ steps.generate-properties.outputs.name }}] ${{ needs.get-version.outputs.version }}"
                 prerelease: true
-                body: ${{ steps.generate-tag-and-body.outputs.body }}
+                body: ${{ steps.generate-properties.outputs.body }}
                   
     execute-pre-release:
       needs:

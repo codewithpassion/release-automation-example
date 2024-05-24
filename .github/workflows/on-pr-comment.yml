@@ -21,14 +21,13 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const comment = '${{ github.event.comment.body }}';
-            core.setOutput('create_release', comment === 'release');
-      - name: Check if issue is open
-        run: echo '${{ toJson(github.event.issue) }}'
+            const isRelease = '${{ github.event.comment.body }}' === 'release';
+            const isOpen = '${{ github.event.issue.state }}' === 'open';
+            core.setOutput('do_release', isRelease && isOpen);
 
       - name: Add reaction to release
         uses: actions/github-script@v6
-        if: steps.check-release-comment.outputs.create_release == 'true'
+        if: steps.check-release-comment.outputs.do_release == 'true'
         env:
           COMMENT_ID: ${{ github.event.comment.id }}
         with:

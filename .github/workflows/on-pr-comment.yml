@@ -12,7 +12,7 @@ jobs:
   pr_commented:
     # This job only runs for pull request comments
     name: PR comment
-    if: ${{ github.event.issue.pull_request }} && ${{ github.event.issue.state == 'open' }}
+    if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
       - id: check-release-comment
@@ -23,6 +23,8 @@ jobs:
           script: |
             const comment = '${{ github.event.comment.body }}';
             core.setOutput('create_release', comment === 'release');
+      - name: Check if issue is open
+        run: echo '${{ toJson(github.event.issue) }}'
 
       - name: Add reaction to release
         uses: actions/github-script@v6

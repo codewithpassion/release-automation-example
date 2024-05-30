@@ -43,7 +43,7 @@ jobs:
               core.setOutput('do_release', isRelease && isOpen);
               core.setOutput('project', project);
 
-              const result = await rest.issues.get({
+              const result = await github.rest.issues.get({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number

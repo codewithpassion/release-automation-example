@@ -52,7 +52,7 @@ jobs:
           fetch-depth: 0
 
       - name: Generate version
-        uses: ./.github/workflows/wc-version.yml
+        uses: ./.github/workflows/version
 
       - name: Debug
         run: |

@@ -64,7 +64,7 @@ jobs:
 
       - name: Generate version
         id: generate-version
-        uses: ./.github/workflows/version@main
+        uses: codewithpassion/release-automation-example/.github/workflows/version@main
         with:
           branch: ${{ steps.check-release-comment.outputs.branch }}
 

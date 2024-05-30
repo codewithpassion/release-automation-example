@@ -22,16 +22,13 @@ inputs:
 outputs:
     version:
         description: "The new version"
-        value: ${{ jobs.version.outputs.version }}
+        value: ${{ steps.git-version.outputs.version }}
     previous-version:
         description: "The previous version"
-        value: ${{ jobs.version.outputs.previous-version }}
+        value: ${{ steps.git-version.outputs.previous-version }}
 
 runs:
     using: "composite"
-    outputs:
-        version:  ${{ steps.git-version.outputs.version }}  # 
-        previous-version: ${{ steps.git-version.outputs.previous-version }}
   
     steps:
       - uses: actions/checkout@v4

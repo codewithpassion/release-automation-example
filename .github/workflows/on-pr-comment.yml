@@ -51,11 +51,11 @@ jobs:
           ref: main # We checkout main to get the versioning workflow
           fetch-depth: 0
 
-      - name: Generate version
+      - name: Generate version ${{  github.ref_name }} - ${{ github.head_ref}}
         id: generate-version
         uses: ./.github/workflows/version
         with:
-          branch: ${{ github.head_ref }}
+          branch: ${{  github.ref_name || github.head_ref }}
 
       - name: Debug
         run: |

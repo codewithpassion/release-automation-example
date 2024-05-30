@@ -15,9 +15,6 @@ jobs:
     if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
-      - id: Test
-        run: |
-          echo "Branch refName: ${{  github.ref_name }} - head_ref ${{ github.head_ref}} - base_ref: ${{ github.base_ref }} - ref: ${{ github.ref }}"
           
       - id: check-release-comment
         name: Check for release comment
@@ -46,7 +43,14 @@ jobs:
               core.setOutput('do_release', isRelease && isOpen);
               core.setOutput('project', project);
 
-              console.log(`Release comment found for project: ${project}`);
+              const result = await rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number
+              });
+
+              core.warning(`Release comment found for project: ${project}`);
+              core.warning(`Issue state: ${ JSON.stringify(result) }`);
   
             }
       - name: Checkout main

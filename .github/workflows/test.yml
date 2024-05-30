@@ -8,7 +8,7 @@ on:
 
 jobs:
     get-version:
-        uses: ./.github/workflows/version.yml
+        uses: ./.github/workflows/wc-version.yml
         with:
             release-branch: "main"
             prefix: "v"

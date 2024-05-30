@@ -1,5 +1,4 @@
-name: Build on Pre-Release
-
+name: Wokflow Call - Build and Release
 on:
   workflow_call:
     inputs:
@@ -20,10 +19,11 @@ on:
         required: false
         default: false
         type: boolean
-
-  # release:
-    # types: [prereleased]
-
+      project:
+        description: "The project for this release"
+        required: true
+        type: string
+    
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,10 +33,6 @@ jobs:
       with:
         ref: ${{ inputs.release-tag }}
         fetch-depth: 0
-
-    - name: Debug
-      run: |
-        echo "Release: ${{ toJson(github.event) }}"
 
     - name: Debug
       run: |

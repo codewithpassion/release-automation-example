@@ -1,4 +1,4 @@
-name: Check Pull Request
+name: Wokflow Call - Check Pull Request
 
 on:
   workflow_dispatch:

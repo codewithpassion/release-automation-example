@@ -1,4 +1,4 @@
-name: Handle git versioning
+name: Wokflow Call - Get new versio 
 
 on:
   workflow_call:

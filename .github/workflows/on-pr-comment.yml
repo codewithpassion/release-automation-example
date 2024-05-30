@@ -21,24 +21,62 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const isRelease = '${{ github.event.comment.body }}' === 'release';
+            const commentBody = '${{ github.event.comment.body }}';
+            const isRelease = commentBody.toLowerCase().includes('release');
+            const project = commentBody.match(/release: (.*)$/)?.[1];
             const isOpen = '${{ github.event.issue.state }}' === 'open';
-            core.setOutput('do_release', isRelease && isOpen);
 
-      - name: Add reaction to release
-        uses: actions/github-script@v6
-        if: steps.check-release-comment.outputs.do_release == 'true'
-        env:
-          COMMENT_ID: ${{ github.event.comment.id }}
-        with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            script: |
-              const commentId = ${{ env.COMMENT_ID }};
-              const reactionContent = 'rocket'; // You can change this to any valid reaction type
-            
-              await github.rest.reactions.createForIssueComment({
+            if (isRelease && !project) {
+              core.setOutput('do_release', false);
+
+              await github.rest.comments.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                comment_id: commentId,
-                content: reactionContent,
-              });          
+                issue_number: context.issue.number,
+                body: '❌ Please provide a project name for the release. Expected format: `Release: <project>`',
+              });
+
+              return;
+            } else {
+
+              core.setOutput('do_release', isRelease && isOpen);
+              core.setOutput('is_open', isOpen);
+              core.setOutput('project', project);
+
+              console.log(`Release comment found for project: ${project}`);
+  
+            }
+
+            # execute-pre-release:
+            #   needs:
+            #     - create-pre-release
+            #     - get-version
+            #     - check-for-pr
+            #   uses: ./.github/workflows/wc-build-and-release.yml
+            #   # We need to call the above workflow through a workflow_call as a 'on: release' event is not executed if the release
+            #   # is created from a workflow unless a Personal GITHUB token is used.
+            #   with:
+            #       release-tag: ${{ needs.create-pre-release.outputs.release-tag }}
+            #       release-body: ${{ needs.create-pre-release.outputs.release-body }}
+            #       release-id: ${{ needs.create-pre-release.outputs.release-id }}
+            #       is-pr: ${{ fromJson(needs.check-for-pr.outputs.has_pull_request) }}
+              
+
+
+      # - name: Add reaction to release
+      #   uses: actions/github-script@v6
+      #   if: steps.check-release-comment.outputs.do_release == 'true'
+      #   env:
+      #     COMMENT_ID: ${{ github.event.comment.id }}
+      #   with:
+      #       github-token: ${{ secrets.GITHUB_TOKEN }}
+      #       script: |
+      #         const commentId = ${{ env.COMMENT_ID }};
+      #         const reactionContent = 'rocket'; // You can change this to any valid reaction type
+            
+      #         await github.rest.reactions.createForIssueComment({
+      #           owner: context.repo.owner,
+      #           repo: context.repo.repo,
+      #           comment_id: commentId,
+      #           content: reactionContent,
+      #         });          

@@ -8,13 +8,13 @@ permissions: write-all
 
 jobs:
     get-version:
-        uses: ./.github/workflows/version.yml
+        uses: ./.github/workflows/wc-version.yml
         with:
             release-branch: "main"
             prefix: "v"
 
     check-for-pr:
-        uses: ./.github/workflows/check-for-pull-request.yml
+        uses: ./.github/workflows/wc-check-for-pull-request.yml
         with:
             ref_name: ${{ github.ref_name || github.head_ref }}
     
@@ -70,7 +70,7 @@ jobs:
         - create-pre-release
         - get-version
         - check-for-pr
-      uses: ./.github/workflows/build-on-pre-release.yml
+      uses: ./.github/workflows/wc-build-and-release.yml
       # We need to call the above workflow through a workflow_call as a 'on: release' event is not executed if the release
       # is created from a workflow unless a Personal GITHUB token is used.
       with:

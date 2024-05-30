@@ -15,14 +15,14 @@ Developers can customize and extend these workflows based on their specific requ
 - `on-pr-comment.yml`: Triggers when a comment is created on a pull request.
 
 ### Helper workflows
-- `build-on-pre-release.yml`: Builds the code on a pre-release.
-- `check-for-pull-request.yml`: Checks for a pull request.
-- `version.yml`: Handles git versioning.
+- `wc-build-and-release.yml`: Builds the code on a pre-release.
+- `wc-check-for-pull-request.yml`: Checks for a pull request.
+- `wc-version.yml`: Handles git versioning.
 
 
-## version.yml
+## wc-version.yml
 
-The `version.yml` workflow is responsible for handling git versioning. It can be called by other workflows and accepts the following inputs:
+The `wc-version.yml` workflow is responsible for handling git versioning. It can be called by other workflows and accepts the following inputs:
 
 - `release-branch`: The branch to compare against (default: "main").
 - `prefix`: The prefix to use for the version (default: "v").
@@ -34,14 +34,14 @@ The workflow outputs the new version and the previous version.
 
 The `manual-pre-release.yml` workflow is triggered manually and creates a pre-release. It performs the following steps:
 
-1. Gets the version using the `version.yml` workflow.
+1. Gets the version using the `wc-version.yml` workflow.
 2. Checks for the existence of a pull request using the `check-for-pull-request.yml` workflow.
 3. Creates a pre-release tag and updates the release body based on whether it's a pull request or a branch.
-4. Executes the `build-on-pre-release.yml` workflow to perform additional actions on the pre-release.
+4. Executes the `wc-build-and-release.yml` workflow to perform additional actions on the pre-release.
 
-## check-for-pull-request.yml
+## wc-check-for-pull-request.yml
 
-The `check-for-pull-request.yml` workflow checks if a pull request exists for a given branch. It accepts the branch name as an input and outputs whether a pull request exists and the pull request number.
+The `wc-check-for-pull-request.yml` workflow checks if a pull request exists for a given branch. It accepts the branch name as an input and outputs whether a pull request exists and the pull request number.
 
 ## build-on-pre-release.yml
 

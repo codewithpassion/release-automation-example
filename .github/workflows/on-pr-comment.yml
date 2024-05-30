@@ -48,17 +48,21 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: main # We checkout main to get the versioning workflow
           fetch-depth: 0
 
       - name: Generate version
+        id: generate-version
         uses: ./.github/workflows/version
+        with:
+          branch: ${{ github.head_ref }}
 
       - name: Debug
         run: |
             echo "Do release: ${{ steps.check-release-comment.outputs.do_release }}"
             echo "Project: ${{ steps.check-release-comment.outputs.project }}"
             echo "Version: ${{ steps.generate-version.outputs.version }}"
+            echo "github info: ${{ toJson(github) }}"
 
       # - name: Create Release
       #   if: steps.check-release-comment.outputs.do_release == 'true'

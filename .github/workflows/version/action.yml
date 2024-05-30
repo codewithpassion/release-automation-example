@@ -7,6 +7,11 @@ inputs:
         default: "main"
         type: string
     
+    branch:
+        description: "The branch to compare against"
+        required: true
+        type: string
+    
     prefix:
         description: "The prefix to use for the version"
         required: false
@@ -33,7 +38,7 @@ runs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}   # checkout the correct branch name
+          ref: ${{ inputs.branch }}   # checkout the correct branch name
           fetch-depth: 0                # fetch the whole repo history
   
       - name: Git Version

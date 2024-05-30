@@ -56,15 +56,15 @@ jobs:
               core.setOutput('branch', branchName);
   
             }
-      - name: Checkout main
-        uses: actions/checkout@v4
-        with:
-          ref: main # We checkout main to get the versioning workflow
-          fetch-depth: 0
+      # - name: Checkout main
+      #   uses: actions/checkout@v4
+      #   with:
+      #     ref: main # We checkout main to get the versioning workflow
+      #     fetch-depth: 0
 
-      - name: Generate version ${{  github.ref_name }} - ${{ github.head_ref}}
+      - name: Generate version
         id: generate-version
-        uses: ./.github/workflows/version
+        uses: ./.github/workflows/version@main
         with:
           branch: ${{ steps.check-release-comment.outputs.branch }}
 

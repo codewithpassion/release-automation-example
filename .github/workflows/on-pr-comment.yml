@@ -33,19 +33,33 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
-                body: '> ${{ github.event.comment.body }}]\n\n❌ Please provide a project name for the release. Expected format: `Release: <project>`',
+                body: '> ${{ github.event.comment.body }}\n\n❌ Please provide a project name for the release. Expected format: `Release: <project>`',
               });
 
               return;
             } else {
 
               core.setOutput('do_release', isRelease && isOpen);
-              core.setOutput('is_open', isOpen);
               core.setOutput('project', project);
 
               console.log(`Release comment found for project: ${project}`);
   
             }
+
+      - name: Generate version
+        uses: ./.github/workflows/wc-version.yml
+
+      - name: Debug
+        run: |
+            echo "Do release: ${{ steps.check-release-comment.outputs.do_release }}"
+            echo "Project: ${{ steps.check-release-comment.outputs.project }}"
+            echo "Version: ${{ steps.generate-version.outputs.version }}"
+
+      # - name: Create Release
+      #   if: steps.check-release-comment.outputs.do_release == 'true'
+      #   uses: ./.github/workflows/wc-build-and-release.yml
+      #   with:
+      #     release-tag: 
 
       # - name: Add reaction to release
       #   uses: actions/github-script@v6

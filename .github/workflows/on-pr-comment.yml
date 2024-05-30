@@ -18,7 +18,6 @@ jobs:
       - id: Test
         run: |
           echo "Branch refName: ${{  github.ref_name }} - head_ref ${{ github.head_ref}} - base_ref: ${{ github.base_ref }} - ref: ${{ github.ref }}"
-          echo "Context: ${{ toJson(context) }}"
           
       - id: check-release-comment
         name: Check for release comment

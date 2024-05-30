@@ -43,15 +43,17 @@ jobs:
               core.setOutput('do_release', isRelease && isOpen);
               core.setOutput('project', project);
 
-              const result = await github.rest.issues.get({
+              const { data: pullRequest } = await github.rest.pulls.get({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: context.issue.number
+                pull_number: pullRequestNumber,
               });
+              
+              const branchName = pullRequest.head.ref;
 
               core.warning(`Release comment found for project: ${project}`);
-              core.warning(`Issue state: ${ JSON.stringify(result.data) }`);
-              core.setOutput('issue', result.data);
+              core.warning(`branch: ${branchName}`);
+              core.setOutput('branch', branchName);
   
             }
       - name: Checkout main
@@ -72,7 +74,7 @@ jobs:
             echo "Project: ${{ steps.check-release-comment.outputs.project }}"
             echo "Version: ${{ steps.generate-version.outputs.version }}"
             echo "github info: ${{ toJson(github) }}"
-            echo "issue info: ${{ toJson(steps.check-release-comment.outputs.issue) }}"
+            echo "issue info: ${{ steps.check-release-comment.outputs.issue }}"
 
       # - name: Create Release
       #   if: steps.check-release-comment.outputs.do_release == 'true'

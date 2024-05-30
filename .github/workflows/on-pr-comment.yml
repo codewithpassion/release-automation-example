@@ -46,7 +46,7 @@ jobs:
               const { data: pullRequest } = await github.rest.pulls.get({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                pull_number: pullRequestNumber,
+                pull_number: context.issue.number,
               });
               
               const branchName = pullRequest.head.ref;

@@ -47,22 +47,6 @@ jobs:
   
             }
 
-            # execute-pre-release:
-            #   needs:
-            #     - create-pre-release
-            #     - get-version
-            #     - check-for-pr
-            #   uses: ./.github/workflows/wc-build-and-release.yml
-            #   # We need to call the above workflow through a workflow_call as a 'on: release' event is not executed if the release
-            #   # is created from a workflow unless a Personal GITHUB token is used.
-            #   with:
-            #       release-tag: ${{ needs.create-pre-release.outputs.release-tag }}
-            #       release-body: ${{ needs.create-pre-release.outputs.release-body }}
-            #       release-id: ${{ needs.create-pre-release.outputs.release-id }}
-            #       is-pr: ${{ fromJson(needs.check-for-pr.outputs.has_pull_request) }}
-              
-
-
       # - name: Add reaction to release
       #   uses: actions/github-script@v6
       #   if: steps.check-release-comment.outputs.do_release == 'true'

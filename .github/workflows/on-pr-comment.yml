@@ -15,6 +15,11 @@ jobs:
     if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
+      - id: Test
+        run: |
+          echo "Branch refName: ${{  github.ref_name }} - head_ref ${{ github.head_ref}} - base_ref: ${{ github.base_ref }} - ref: ${{ github.ref }}"
+          echo "Context: ${{ toJson(context) }}"
+          
       - id: check-release-comment
         name: Check for release comment
         uses: actions/github-script@v6

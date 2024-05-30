@@ -22,7 +22,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const commentBody = "${{ github.event.comment.body }}";
+            const commentBody = ${{ toJson( github.event.comment.body ) }};
             const isRelease = commentBody.toLowerCase().includes('release:');
             const project = commentBody.match(/release: (.*)$/)?.[1];
             const isOpen = '${{ github.event.issue.state }}' === 'open';

@@ -45,6 +45,11 @@ jobs:
               console.log(`Release comment found for project: ${project}`);
   
             }
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Generate version
         uses: ./.github/workflows/wc-version.yml

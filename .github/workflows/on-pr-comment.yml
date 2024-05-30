@@ -50,7 +50,6 @@ jobs:
               });
 
               core.warning(`Release comment found for project: ${project}`);
-              core.warning(`Head ref: ${result.data.head.ref}`);
               core.warning(`Issue state: ${ JSON.stringify(result.data) }`);
               core.setOutput('issue', result.data);
   

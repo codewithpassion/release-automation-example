@@ -56,23 +56,26 @@ jobs:
               core.setOutput('branch', branchName);
   
             }
-      # - name: Checkout main
-      #   uses: actions/checkout@v4
-      #   with:
-      #     ref: main # We checkout main to get the versioning workflow
-      #     fetch-depth: 0
 
-      - name: Generate version
-        id: generate-version
-        uses: codewithpassion/release-automation-example/.github/workflows/version@main
+      - name: Checkout main
+        uses: actions/checkout@v4
         with:
-          branch: ${{ steps.check-release-comment.outputs.branch }}
+          ref: ${{ steps.check-release-comment.outputs.branch }}
+          fetch-depth: 0
+
+      - name: Git Version
+        id: git-version
+        uses: codacy/git-version@2.8.0
+        with:
+          release-branch: 'main'
+          prefix: 'v'
+          log-paths: 'v'
 
       - name: Debug
         run: |
             echo "Do release: ${{ steps.check-release-comment.outputs.do_release }}"
             echo "Project: ${{ steps.check-release-comment.outputs.project }}"
-            echo "Version: ${{ steps.generate-version.outputs.version }}"
+            echo "Version: ${{ steps.git-version.outputs.version }}"
 
       # - name: Create Release
       #   if: steps.check-release-comment.outputs.do_release == 'true'

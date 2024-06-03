@@ -99,7 +99,7 @@ jobs:
 
       - name: Create tag
         if: steps.check-release-comment.outputs.do_release == 'true'
-        uses: ./.github/workflows/tag
+        uses: ./.github/workflows/tag@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           ref_name: ${{ steps.check-release-comment.outputs.branch }}

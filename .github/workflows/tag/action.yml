@@ -1,0 +1,40 @@
+name: Action - Create a tag
+
+inputs:
+  ref_name:
+    description: "The branch to tag"
+    required: true
+    type: string
+
+  tag_name:
+    description: "The tag to create"
+    required: true
+    type: string
+
+  github_token:
+    description: "The github token"
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.ref_name }}   # checkout the correct branch name
+        fetch-depth: 0                # fetch the whole repo history
+
+    - name: Create tag
+      shell: bash
+      run: |
+        if [ -z "${{ inputs.github_token }}" ]; then
+          echo "No github token provided"
+          exit 1
+        fi
+        if [ -z "${{ inputs.tag_name }}" ]; then
+          echo "No tag name provided"
+          exit 1
+        fi
+        echo "Creating tag ${{ inputs.tag_name }}"
+        git tag ${{ inputs.tag_name }}
+        git push origin --tags

@@ -152,7 +152,7 @@ jobs:
             
             const reactionContent = 'confused'; 
 
-            const tag_existed = ${{ toJson( steps.create-tag-name.outputs.tag_exists ) }};
+            const tag_existed = "${{ toJson( steps.create-tag-name.outputs.tag_exists ) }}";
             
             await github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,

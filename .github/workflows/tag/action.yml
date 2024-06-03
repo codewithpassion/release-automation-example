@@ -37,4 +37,4 @@ runs:
         fi
         echo "Creating tag ${{ inputs.tag_name }}"
         git tag ${{ inputs.tag }}
-        git push origin ${{ inputs.tag_name }}
+        git push origin --tags

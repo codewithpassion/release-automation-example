@@ -1,0 +1,38 @@
+name: Action - Build and push upstream
+
+inputs:
+    ref_name:
+        description: "The branch to build"
+        required: true
+        default: "main"
+        type: string
+    
+    project:
+        description: "The project to build for"
+        required: true
+        type: string
+
+    tag:
+        description: "The tag for this release"
+        required: true
+        type: string
+
+outputs:
+    success:
+        description: "Whether the build was successful"
+        value: ${{ steps.build.outputs.success }}
+
+runs: 
+    using: "composite"
+  
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref_name }}   # checkout the correct branch name
+          fetch-depth: 0                # fetch the whole repo history
+        
+      - name: Build
+        id: build
+        shell: bash
+        run: |
+            echo "Building project ${{ inputs.project }} for tag ${{ inputs.tag }}"

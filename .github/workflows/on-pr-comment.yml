@@ -106,6 +106,7 @@ jobs:
           fetch-depth: 0
 
       - name: Create tag
+        id: create-tag
         if: steps.check-release-comment.outputs.do_release == 'true'
         uses: ./.github/workflows/tag
         with:
@@ -151,7 +152,7 @@ jobs:
           script: |
             
             const reactionContent = 'confused'; 
-            const tag_existed = "${{ toJson( steps.create-tag-name.outputs.tag_exists ) }}";
+            const tag_existed = "${{ toJson( steps.create-tag.outputs.tag_exists ) }}";
 
             await github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,

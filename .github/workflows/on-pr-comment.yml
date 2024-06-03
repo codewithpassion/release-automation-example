@@ -62,6 +62,7 @@ jobs:
               core.warning(`branch: ${branchName}`);
               core.setOutput('branch', branchName);
               core.setOutput('pull_number', context.issue.number);
+              core.setOutput('comment_id', github.event.comment.id);
   
             }
 
@@ -153,6 +154,6 @@ jobs:
             await github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              comment_id: github.event.comment.id,
+              comment_id: ${{ steps.check-release-comment.outputs.comment_id }},
               content: reactionContent,
             });

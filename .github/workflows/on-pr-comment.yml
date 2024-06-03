@@ -14,8 +14,15 @@ jobs:
     name: PR comment
     if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
-    steps:
-          
+    outputs:
+      do_release:   ${{ steps.check-release-comment.outputs.do_release }}
+      project:      ${{ steps.check-release-comment.outputs.project }}
+      branch:       ${{ steps.check-release-comment.outputs.branch }}
+      pull_number:  ${{ steps.check-release-comment.outputs.pull_number }}
+      generated_version:      ${{ steps.git-version.outputs.version }}
+      version:      ${{ steps.create-tag-name.outputs.new_version }}
+      
+    steps:          
       - id: check-release-comment
         name: Check for release comment
         uses: actions/github-script@v6
@@ -54,6 +61,7 @@ jobs:
               core.warning(`Release comment found for project: ${project}`);
               core.warning(`branch: ${branchName}`);
               core.setOutput('branch', branchName);
+              core.setOutput('pull_number', context.issue.number);
   
             }
 
@@ -72,34 +80,26 @@ jobs:
           prefix: 'v'
           log-paths: './'
 
-      - name: Debug
+      - name: Create version tag name
         if: steps.check-release-comment.outputs.do_release == 'true'
+        id: create-tag-name
         run: |
             echo "Do release: ${{ steps.check-release-comment.outputs.do_release }}"
             echo "Project: ${{ steps.check-release-comment.outputs.project }}"
             echo "Version: ${{ steps.git-version.outputs.version }}"
+            echo "Pull number: ${{ steps.check-release-comment.outputs.pull_number }}"
 
+            string=v${{ steps.git-version.outputs.version }}
+            before_dash=$(echo "$string" | cut -d'-' -f1)
+            after_dash=$(echo "$string" | cut -d'-' -f2-)
 
-      - name: Create Release
-        if: steps.check-release-comment.outputs.do_release == 'true'
-        uses: ./.github/workflows/wc-build-and-release.yml
+            export NEW_VERSION="${before_dash}-pr-${{ steps.check-release-comment.outputs.pull_number }}-${after_dash}"
+            echo "New version: $NEW_VERSION"
+            echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Build
+        uses: ./.github/workflows/build
         with:
-          release-tag: 
-
-      # - name: Add reaction to release
-      #   uses: actions/github-script@v6
-      #   if: steps.check-release-comment.outputs.do_release == 'true'
-      #   env:
-      #     COMMENT_ID: ${{ github.event.comment.id }}
-      #   with:
-      #       github-token: ${{ secrets.GITHUB_TOKEN }}
-      #       script: |
-      #         const commentId = ${{ env.COMMENT_ID }};
-      #         const reactionContent = 'rocket'; // You can change this to any valid reaction type
-            
-      #         await github.rest.reactions.createForIssueComment({
-      #           owner: context.repo.owner,
-      #           repo: context.repo.repo,
-      #           comment_id: commentId,
-      #           content: reactionContent,
-      #         });          
+          ref_name: ${{ steps.check-release-comment.outputs.branch }}
+          version: ${{ steps.create-tag-name.outputs.new_version }}
+          project: ${{ steps.check-release-comment.outputs.project }}

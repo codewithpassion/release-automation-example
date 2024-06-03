@@ -33,6 +33,7 @@ jobs:
             const isRelease = commentBody.toLowerCase().includes('release:');
             const project = commentBody.match(/release: (.*)$/)?.[1];
             const isOpen = '${{ github.event.issue.state }}' === 'open';
+            core.setOutput('comment_id', '${{ github.event.comment.id }}');
 
             if (isRelease && !project) {
               core.setOutput('do_release', false);
@@ -62,7 +63,7 @@ jobs:
               core.warning(`branch: ${branchName}`);
               core.setOutput('branch', branchName);
               core.setOutput('pull_number', context.issue.number);
-              core.setOutput('comment_id', github.event.comment.id);
+              
   
             }
 

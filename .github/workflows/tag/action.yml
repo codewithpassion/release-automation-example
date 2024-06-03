@@ -16,6 +16,11 @@ inputs:
     required: true
     type: string
 
+outputs:
+  tag_exists:
+    description: "Whether the tag already exists"
+    value: ${{ steps.create-tag.outputs.tag_exists }}
+
 runs:
   using: "composite"
   steps:
@@ -25,6 +30,7 @@ runs:
         fetch-depth: 0                # fetch the whole repo history
 
     - name: Create tag
+      id: create-tag
       shell: bash
       run: |
         if [ -z "${{ inputs.github_token }}" ]; then
@@ -36,5 +42,12 @@ runs:
           exit 1
         fi
         echo "Creating tag ${{ inputs.tag_name }}"
+        if git rev-parse -q --verify "refs/tags/${{ inputs.tag_name }}"; then
+          echo "Tag ${{ inputs.tag_name }} already exists"
+          echo "tag_exists=true" >> $GITHUB_OUTPUT
+          exit 1
+        else 
+          echo "tag_exists=false" >> $GITHUB_OUTPUT
+        fi
         git tag ${{ inputs.tag_name }}
         git push origin --tags

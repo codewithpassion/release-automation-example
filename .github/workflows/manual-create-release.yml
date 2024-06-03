@@ -89,7 +89,7 @@ jobs:
                 name: "[${{ inputs.project }}] ${{ steps.git-version.outputs.version }}"
                 prerelease: ${{ inputs.is_draft_release }}
                 body: ${{ steps.generate-body.outputs.body }}                
-                artifact: "./artifact.txt"
+                artifacts: "./artifact.txt"
 
 
             - name: Add reaction
@@ -98,15 +98,6 @@ jobs:
                 github-token: ${{ secrets.GITHUB_TOKEN }}
                 script: |
                     const releaseId = ${{ steps.create-release.outputs.id }};
-                    # const existingBody = '${{ steps.generate-body.outputs.body }}';
-                    # const updatedBody = `${existingBody}\n\nReleased`;
-                    
-                    # await github.rest.repos.updateRelease({
-                    #     owner: context.repo.owner,
-                    #     repo: context.repo.repo,
-                    #     release_id: releaseId,
-                    #     body: updatedBody,
-                    # });
 
                     const reactionContent = 'rocket'; 
                     await github.rest.reactions.createForRelease({

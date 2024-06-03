@@ -152,7 +152,7 @@ jobs:
             
             const reactionContent = 'confused'; 
 
-            const tag_existed = "${{ toJson( steps.create-tag-name.outputs.tag_exists ) }}";
+            //const tag_existed = "${{ toJson( steps.create-tag-name.outputs.tag_exists ) }}";
             
             await github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,
@@ -161,18 +161,18 @@ jobs:
               content: reactionContent,
             });
 
-            if (tag_existed) {
+            //if (tag_existed) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
                 body: '> ${{ toJson( github.event.comment.body ) }}\n\n❌ [Tag already exists](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). It seems you didn't push any new changes to the branch. Please check the logs.',
               });
-            } else {
+            /*} else {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
                 body: '> ${{ toJson( github.event.comment.body ) }}\n\n❌ [Build failed](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). Please check the logs.',
               });
-            }
+            }*/

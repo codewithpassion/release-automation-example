@@ -1,4 +1,4 @@
-name: Wokflow Call - Get new versio 
+name: Wokflow Call - Get new version
 
 on:
   workflow_call:

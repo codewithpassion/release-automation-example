@@ -34,13 +34,9 @@ jobs:
         ref: ${{ inputs.release-tag }}
         fetch-depth: 0
 
-    - name: Debug
-      run: |
-        echo "Release: ${{ toJson(github.event) }}"
-
     - name: Run build script
       run: |
-        echo "Running ./ops/scripts/build.sh"
+        echo "Running ./ops/scripts/build.sh --project ${{ inputs.project }}"
 
 
     - name: Update release body

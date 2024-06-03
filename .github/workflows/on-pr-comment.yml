@@ -57,31 +57,34 @@ jobs:
   
             }
 
-      - name: Checkout main
+      - name: Checkout branch
         uses: actions/checkout@v4
         with:
           ref: ${{ steps.check-release-comment.outputs.branch }}
           fetch-depth: 0
 
       - name: Git Version
+        if: steps.check-release-comment.outputs.do_release == 'true'
         id: git-version
         uses: codacy/git-version@2.8.0
         with:
           release-branch: 'main'
           prefix: 'v'
-          log-paths: 'v'
+          log-paths: './'
 
       - name: Debug
+        if: steps.check-release-comment.outputs.do_release == 'true'
         run: |
             echo "Do release: ${{ steps.check-release-comment.outputs.do_release }}"
             echo "Project: ${{ steps.check-release-comment.outputs.project }}"
             echo "Version: ${{ steps.git-version.outputs.version }}"
 
-      # - name: Create Release
-      #   if: steps.check-release-comment.outputs.do_release == 'true'
-      #   uses: ./.github/workflows/wc-build-and-release.yml
-      #   with:
-      #     release-tag: 
+
+      - name: Create Release
+        if: steps.check-release-comment.outputs.do_release == 'true'
+        uses: ./.github/workflows/wc-build-and-release.yml
+        with:
+          release-tag: 
 
       # - name: Add reaction to release
       #   uses: actions/github-script@v6

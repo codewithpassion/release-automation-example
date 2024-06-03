@@ -72,6 +72,13 @@ jobs:
                 body="Project ${{ inputs.project }} release ${{ steps.git-version.outputs.version }}"
                 echo "body=$body" >> $GITHUB_OUTPUT
 
+            - name: Build
+              uses: ./.github/workflows/build
+              with:
+                ref_name: ${{ steps.create-tag-name.outputs.tag }}
+                project: ${{ inputs.project }}
+                tag: ${{ steps.create-tag-name.outputs.tag }}
+    
             - name: Create Release
               id: create-release
               uses: ncipollo/release-action@v1
@@ -81,32 +88,25 @@ jobs:
                 tag: ${{ steps.git-version.outputs.version }}
                 name: "[${{ inputs.project }}] ${{ steps.git-version.outputs.version }}"
                 prerelease: ${{ inputs.is_draft_release }}
-                body: ${{ steps.generate-body.outputs.body }}
-
-            - name: Build
-              uses: ./.github/workflows/build
-              with:
-                ref_name: ${{ steps.create-tag-name.outputs.tag }}
-                project: ${{ inputs.project }}
-                tag: ${{ steps.create-tag-name.outputs.tag }}
-    
+                body: ${{ steps.generate-body.outputs.body }}                
+                artifact: "./artifact.txt"
 
 
-            - name: Update release body
+            - name: Add reaction
               uses: actions/github-script@v7
               with:
                 github-token: ${{ secrets.GITHUB_TOKEN }}
                 script: |
                     const releaseId = ${{ steps.create-release.outputs.id }};
-                    const existingBody = '${{ steps.generate-body.outputs.body }}';
-                    const updatedBody = `${existingBody}\n\nReleased`;
+                    # const existingBody = '${{ steps.generate-body.outputs.body }}';
+                    # const updatedBody = `${existingBody}\n\nReleased`;
                     
-                    await github.rest.repos.updateRelease({
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        release_id: releaseId,
-                        body: updatedBody,
-                    });
+                    # await github.rest.repos.updateRelease({
+                    #     owner: context.repo.owner,
+                    #     repo: context.repo.repo,
+                    #     release_id: releaseId,
+                    #     body: updatedBody,
+                    # });
 
                     const reactionContent = 'rocket'; 
                     await github.rest.reactions.createForRelease({

@@ -36,3 +36,4 @@ runs:
         shell: bash
         run: |
             echo "Building project ${{ inputs.project }} for tag ${{ inputs.tag }}"
+            echo "Build successful for ${{ inputs.project }} for tag ${{ inputs.tag }}" > artifact.txt

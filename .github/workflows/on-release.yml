@@ -2,11 +2,12 @@ name: On Release Workflow
 
 on:
   release:
-    types: [published]
+    types: [edited]
 
 jobs:
     build:
         runs-on: ubuntu-latest
+        if: ${{ !github.event.release.draft }}
 
         steps:
             - uses: actions/checkout@v4
@@ -17,12 +18,4 @@ jobs:
             - name: Run build script
               run: |
                 echo "Running ./ops/scripts/build.sh --project ${{ github.event.release.tag_name }}"
-                
-            # - name: Build
-            #   uses: ./.github/workflows/build
-            #   if: steps.check-release-comment.outputs.do_release == 'true'
-            #   with:
-            #     ref_name: ${{ steps.create-tag-name.outputs.new_version }}
-            #     project: ${{ steps.check-release-comment.outputs.project }}
-            #     tag: ${{ steps.create-tag-name.outputs.new_version }}
-        
+

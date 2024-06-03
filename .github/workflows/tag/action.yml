@@ -6,7 +6,7 @@ inputs:
     required: true
     type: string
 
-  tag:
+  tag_name:
     description: "The tag to create"
     required: true
     type: string
@@ -27,6 +27,14 @@ runs:
     - name: Create tag
       shell: bash
       run: |
-        echo "Creating tag ${{ inputs.tag }}"
+        if [ -z "${{ inputs.github_token }}" ]; then
+          echo "No github token provided"
+          exit 1
+        fi
+        if [ -z "${{ inputs.tag_name }}" ]; then
+          echo "No tag name provided"
+          exit 1
+        fi
+        echo "Creating tag ${{ inputs.tag_name }}"
         git tag ${{ inputs.tag }}
-        git push origin ${{ inputs.tag }}
+        git push origin ${{ inputs.tag_name }}

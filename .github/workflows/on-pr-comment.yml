@@ -163,7 +163,7 @@ jobs:
 
             let message = "❌ [Build failed](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). Please check the logs.";
             if (tag_existed === 'true') {
-              message = "❌ [Build failed](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). A tag with the same name already exists. Please check the logs.";
+              message = "❌ [Build failed](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). A tag with the same name already exists. Did you push anything to this branch?\nPlease check the logs.";
             }
 
             await github.rest.issues.createComment({

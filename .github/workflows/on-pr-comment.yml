@@ -150,7 +150,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             
-            const reactionContent = '-1'; 
+            const reactionContent = 'confused'; 
             
             await github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,
@@ -163,5 +163,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: '> ${{ toJson( github.event.comment.body ) }}\n\n❌ Build failed. Please check the logs.',
+              body: '> ${{ toJson( github.event.comment.body ) }}\n\n❌ [Build failed](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). Please check the logs.',
             });

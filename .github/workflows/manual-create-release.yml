@@ -43,11 +43,9 @@ jobs:
               run: |
                     echo "Project: ${{ inputs.project }}"
                     version="${{ steps.git-version.outputs.version }}"
-                    if [[ "${{ inputs.is_draft_release }}" == "true" ]]; then
-                        version="${version}-pre"
-                    fi
                     echo "Version: ${version}"
                     tag="${version}-${{ inputs.project }}"
+
                     echo "Tag: $tag"
                     echo "tag=$tag" >> $GITHUB_OUTPUT
                     echo "version=${version}" >> $GITHUB_OUTPUT

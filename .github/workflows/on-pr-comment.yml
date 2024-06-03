@@ -95,7 +95,7 @@ jobs:
 
             export NEW_VERSION="${before_dash}-pr-${{ steps.check-release-comment.outputs.pull_number }}-${after_dash}"
             echo "New version: $NEW_VERSION"
-            echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
+            echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Checkout main
         uses: actions/checkout@v4

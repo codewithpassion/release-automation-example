@@ -140,9 +140,17 @@ jobs:
             await github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              comment_id: github.event.comment.id,
+              comment_id: ${{ steps.check-release-comment.outputs.comment_id }},
               content: reactionContent,
             });
+            let message = "✅ [Build successful](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).";
+
+            await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: '> ${{ toJson( github.event.comment.body ) }}\n\n' + message,
+              });            
 
       - name: Add reaction the comment on failure
         uses: actions/github-script@v6

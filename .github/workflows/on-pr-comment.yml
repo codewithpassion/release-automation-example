@@ -97,9 +97,17 @@ jobs:
             echo "New version: $NEW_VERSION"
             echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
 
+      - name: Create tag
+        if: steps.check-release-comment.outputs.do_release == 'true'
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.create-tag-name.outputs.new_version }}
+
       - name: Build
         uses: ./.github/workflows/build
+        if: steps.check-release-comment.outputs.do_release == 'true'
         with:
-          ref_name: ${{ steps.check-release-comment.outputs.branch }}
-          version: ${{ steps.create-tag-name.outputs.new_version }}
+          ref_name: ${{ steps.create-tag-name.outputs.new_version }}
           project: ${{ steps.check-release-comment.outputs.project }}
+          tag: ${{ steps.create-tag-name.outputs.new_version }}

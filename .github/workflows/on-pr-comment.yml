@@ -124,3 +124,18 @@ jobs:
           ref_name: ${{ steps.create-tag-name.outputs.new_version }}
           project: ${{ steps.check-release-comment.outputs.project }}
           tag: ${{ steps.create-tag-name.outputs.new_version }}
+
+      - name: Add reaction to release
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            
+            const reactionContent = 'rocket'; 
+            
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: github.event.comment.id,
+              content: reactionContent,
+            });                    

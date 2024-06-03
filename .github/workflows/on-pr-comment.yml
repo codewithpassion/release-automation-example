@@ -150,11 +150,18 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             
-            const reactionContent = 'thinking_face'; 
+            const reactionContent = '-1'; 
             
             await github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               comment_id: ${{ steps.check-release-comment.outputs.comment_id }},
               content: reactionContent,
+            });
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '> ${{ toJson( github.event.comment.body ) }}\n\n❌ Build failed. Please check the logs.',
             });

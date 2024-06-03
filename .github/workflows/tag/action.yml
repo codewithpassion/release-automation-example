@@ -25,22 +25,7 @@ runs:
         fetch-depth: 0                # fetch the whole repo history
 
     - name: Create tag
-      uses: actions/github-script@v6
-      with:
-        github-token: ${{ inputs.github_token }}
-        script: |
-          try {
-            const tag = core.getInput('tag', { required: true });
-            const sha = github.context.sha;
-            core.warning(`tagging #${sha} with tag ${tag}`);
-            yield client.git.createRef({
-              owner: github.context.repo.owner,
-              repo: github.context.repo.repo,
-              ref: `refs/tags/${tag}`,
-              sha: sha
-            });
-          }
-          catch (error) {
-            core.error(error);
-            core.setFailed(error.message);
-          }
+      run: |
+        echo "Creating tag ${{ inputs.tag }}"
+        git tag ${{ inputs.tag }}
+        git push origin ${{ inputs.tag }}

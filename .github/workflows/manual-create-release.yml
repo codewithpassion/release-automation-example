@@ -17,6 +17,8 @@ on:
                     - project1
                     - project2
 
+permissions: write-all
+
 jobs:
     release:
         runs-on: ubuntu-latest
@@ -41,7 +43,9 @@ jobs:
               run: |
                     echo "Project: ${{ inputs.project }}"
                     echo "Version: ${{ steps.git-version.outputs.version }}"
-                    echo "tag=${{ steps.git-version.outputs.version }}-${{ inputs.project }}" >> $GITHUB_OUTPUT
+                    tag="${{ steps.git-version.outputs.version }}-${{ inputs.project }}"
+                    echo "tag: $tag"
+                    echo "tag=$tag" >> $GITHUB_OUTPUT
 
                     
             - name: Create and push tag
@@ -50,6 +54,7 @@ jobs:
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
                 custom_tag: ${{ steps.create-tag-name.outputs.tag }}
+                tag_prefix: ''
 
             # - name: Create tag
             #   id: create-tag

@@ -151,6 +151,7 @@ jobs:
           script: |
             
             const reactionContent = 'confused'; 
+            const tag_existed = "${{ toJson( steps.create-tag-name.outputs.tag_exists ) }}";
 
             await github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,
@@ -159,9 +160,14 @@ jobs:
               content: reactionContent,
             });
 
+            let message = "❌ [Build failed](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). Please check the logs.";
+            if (tag_existed === 'true') {
+              message = "❌ [Build failed](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). A tag with the same name already exists. Please check the logs.";
+            }
+
             await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
-                body: '> ${{ toJson( github.event.comment.body ) }}\n\n❌ [Build failed](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). Please check the logs.',
+                body: '> ${{ toJson( github.event.comment.body ) }}\n\n' + message,
               });

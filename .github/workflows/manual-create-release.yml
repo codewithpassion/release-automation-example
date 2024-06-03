@@ -41,7 +41,7 @@ jobs:
               run: |
                     echo "Project: ${{ inputs.project }}"
                     echo "Version: ${{ steps.git-version.outputs.version }}"
-                    echo "tag=${{ steps.git-version.outputs.version }}-${{ inputs.project }}"
+                    echo "tag=${{ steps.git-version.outputs.version }}-${{ inputs.project }}" >> $GITHUB_OUTPUT
 
                     
             - name: Create and push tag
@@ -50,7 +50,16 @@ jobs:
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
                 custom_tag: ${{ steps.create-tag-name.outputs.tag }}
-      
+
+            # - name: Create tag
+            #   id: create-tag
+            #   uses: ./.github/workflows/tag
+            #   with:
+            #     github_token: ${{ secrets.GITHUB_TOKEN }}
+            #     ref_name: ${{ steps.check-release-comment.outputs.branch }}
+            #     tag_name: ${{ steps.create-tag-name.outputs.new_version }}
+    
+            
             - name: Genearte body
               id: generate-body
               run: |

@@ -34,7 +34,7 @@ runs:
                 try {
                     const tag = core.getInput('tag', { required: true });
                     const sha = github.context.sha;
-                    core.info(`tagging #${sha} with tag ${tag}`);
+                    core.warning(`tagging #${sha} with tag ${tag}`);
                     yield client.git.createRef({
                         owner: github.context.repo.owner,
                         repo: github.context.repo.repo,

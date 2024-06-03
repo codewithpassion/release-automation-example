@@ -1,48 +1,46 @@
 name: Action - Create a tag
 
 inputs:
-    ref_name:
-        description: "The branch to tag"
-        required: true
-        type: string
-    
-    tag:
-        description: "The tag to create"
-        required: true
-        type: string
-    
-    github_token:
-        description: "The github token"
-        required: true
-        type: string
+  ref_name:
+    description: "The branch to tag"
+    required: true
+    type: string
 
+  tag:
+    description: "The tag to create"
+    required: true
+    type: string
+
+  github_token:
+    description: "The github token"
+    required: true
+    type: string
 
 runs:
-    using: "composite"
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.ref_name }}   # checkout the correct branch name
+        fetch-depth: 0                # fetch the whole repo history
 
-    steps:
-        - uses: actions/checkout@v4
-          with:
-              ref: ${{ inputs.ref_name }}   # checkout the correct branch name
-              fetch-depth: 0                # fetch the whole repo history
-
-        - name: Create tag
-          uses: actions/github-script@v6
-          with:
-            github-token: ${{ inputs.github_token }}
-            script: |
-                try {
-                    const tag = core.getInput('tag', { required: true });
-                    const sha = github.context.sha;
-                    core.warning(`tagging #${sha} with tag ${tag}`);
-                    yield client.git.createRef({
-                        owner: github.context.repo.owner,
-                        repo: github.context.repo.repo,
-                        ref: `refs/tags/${tag}`,
-                        sha: sha
-                    });    
-                }
-                catch (error) {
-                    core.errror(error);
-                    core.setFailed(error.message);
-                }
+    - name: Create tag
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ inputs.github_token }}
+        script: |
+          try {
+            const tag = core.getInput('tag', { required: true });
+            const sha = github.context.sha;
+            core.warning(`tagging #${sha} with tag ${tag}`);
+            yield client.git.createRef({
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
+              ref: `refs/tags/${tag}`,
+              sha: sha
+            });
+          }
+          catch (error) {
+            core.error(error);
+            core.setFailed(error.message);
+          }

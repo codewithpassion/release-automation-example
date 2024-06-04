@@ -127,7 +127,7 @@ jobs:
           project: ${{ steps.check-release-comment.outputs.project }}
 
       - name: Add reaction the comment
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         if: success()
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -151,7 +151,7 @@ jobs:
               });            
 
       - name: Add reaction the comment on failure
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         if: failure()
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

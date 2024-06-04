@@ -64,7 +64,6 @@ jobs:
               uses: ./.github/workflows/build
               with:
                 ref_name: ${{ steps.create-tag-and-version-name.outputs.tag }}
-                tag: ${{ steps.create-tag-and-version-name.outputs.tag }}
                 project: ${{ inputs.project }}
                 
     

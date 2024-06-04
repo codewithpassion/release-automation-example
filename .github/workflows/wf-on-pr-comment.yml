@@ -125,7 +125,6 @@ jobs:
         with:
           ref_name: ${{ steps.create-tag-name.outputs.new_version }}
           project: ${{ steps.check-release-comment.outputs.project }}
-          tag: ${{ steps.create-tag-name.outputs.new_version }}
 
       - name: Add reaction the comment
         uses: actions/github-script@v6

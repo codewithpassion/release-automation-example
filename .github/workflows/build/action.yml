@@ -14,7 +14,8 @@ inputs:
 
     tag:
         description: "The tag for this release"
-        required: true
+        required: false
+        default: null
         type: string
 
 outputs:
@@ -35,5 +36,5 @@ runs:
         id: build
         shell: bash
         run: |
-            echo "Building project ${{ inputs.project }} for tag ${{ inputs.tag }}"
-            echo "Build successful for ${{ inputs.project }} for tag ${{ inputs.tag }}" > artifact.txt
+            echo "Building project ${{ inputs.project }} for tag ${{ inputs.tag || inputs.ref_name }}"
+            echo "Build successful for ${{ inputs.project }} for tag ${{ inputs.tag  || inputs.ref_name     }}" > artifact.txt

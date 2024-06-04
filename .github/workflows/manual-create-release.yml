@@ -13,7 +13,7 @@ on:
 
 permissions: write-all
 
-run-name: "Create release ${{ vars.tag }} for project ${{ inputs.project }} by @${{ github.actor }}"
+run-name: "Create release for project ${{ inputs.project }} by @${{ github.actor }}"
 
 jobs:
     release:
@@ -45,7 +45,6 @@ jobs:
                     echo "Tag: $tag"
                     echo "tag=$tag" >> $GITHUB_OUTPUT
                     echo "version=${version}" >> $GITHUB_OUTPUT
-                    echo "tag=${tag}" >> $GITHUB_ENV
 
                     
             - name: Create and push tag

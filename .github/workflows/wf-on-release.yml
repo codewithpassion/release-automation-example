@@ -1,4 +1,4 @@
-name: On Release Workflow
+name: Workflow - On Release
 
 on:
   release:

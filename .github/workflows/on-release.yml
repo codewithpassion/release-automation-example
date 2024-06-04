@@ -2,7 +2,8 @@ name: On Release Workflow
 
 on:
   release:
-    types: [published, unpublished, created, edited, deleted, prereleased, released]    
+    # types: [published, unpublished, created, edited, deleted, prereleased, released]    
+    types: [published, edited, released]    
 
 jobs:
     build:

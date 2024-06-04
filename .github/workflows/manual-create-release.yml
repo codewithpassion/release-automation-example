@@ -13,6 +13,8 @@ on:
 
 permissions: write-all
 
+run-name: "Create release ${{ vars.tag }} for project ${{ inputs.project }} by @${{ github.actor }}"
+
 jobs:
     release:
         runs-on: ubuntu-latest
@@ -43,6 +45,7 @@ jobs:
                     echo "Tag: $tag"
                     echo "tag=$tag" >> $GITHUB_OUTPUT
                     echo "version=${version}" >> $GITHUB_OUTPUT
+                    echo "tag=${tag}" >> $GITHUB_ENV
 
                     
             - name: Create and push tag
@@ -57,8 +60,7 @@ jobs:
               id: generate-body
               run: |
                 echo "Generating body"
-                body="Project: ${{ inputs.project }} \\n Release: ${{ steps.create-tag-and-version-name.outputs.version }}"
-                echo "body=$body" >> $GITHUB_OUTPUT
+                echo "body=Project: ${{ inputs.project }} \nRelease: ${{ steps.create-tag-and-version-name.outputs.version }}" >> $GITHUB_OUTPUT
 
             - name: Build
               uses: ./.github/workflows/build

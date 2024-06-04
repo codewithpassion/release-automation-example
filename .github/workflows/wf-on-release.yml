@@ -12,11 +12,12 @@ jobs:
         steps:
             - uses: actions/checkout@v4
               with:
-                ref: ${{ github.event.release.tag }}
+                ref: ${{ github.event.release.tag_name }}
                 fetch-depth: 0
 
             - name: Run build script
               run: |
+                echo "release: ${{ toJson(github.event.release) }}"
                 echo "Running ./ops/scripts/build.sh --project ${{ github.event.release.tag_name }}"
                 echo "${{ toJson(github.event) }}"
 

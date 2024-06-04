@@ -6,7 +6,7 @@ on:
 
 permissions: write-all
 
-run-name: Workflow run on PR comment for PR ${{ github.event.issue.number }} by @${{ github.actor }}
+run-name: WF run on comment PR \#${{ github.event.issue.number }} '${{ github.event.issue.title }}' by @${{ github.actor }}
 
 jobs:
   pr_commented:

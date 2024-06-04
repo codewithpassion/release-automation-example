@@ -55,13 +55,6 @@ jobs:
                 custom_tag: ${{ steps.create-tag-and-version-name.outputs.tag }}
                 tag_prefix: ''
 
-            - name: Genearte body
-              id: generate-body
-              run: |
-                echo "Generating body"
-                echo -e "Project: ${{ inputs.project }} \nRelease: ${{ steps.create-tag-and-version-name.outputs.version }}" > bodyfile.txt
-                cat bodyfile.txt
-
             - name: Build
               uses: ./.github/workflows/build
               with:
@@ -78,7 +71,7 @@ jobs:
                 tag: ${{ steps.create-tag-and-version-name.outputs.version }}
                 name: "[${{ inputs.project }}] ${{ steps.create-tag-and-version-name.outputs.version }}"
                 prerelease: true
-                bodyFile: "./bodyfile.txt"
+                body: "Project: ${{ inputs.project }} \nRelease: ${{ steps.create-tag-and-version-name.outputs.version }}"
                 artifacts: "./artifact.txt"
 
 

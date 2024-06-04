@@ -18,7 +18,6 @@ jobs:
             - name: Run build script
               run: |
                 # echo "release: ${{ toJson(github.event.release) }}"
-                echo "release: ${{ github.event.release.name }}"
                 project=$(echo "${{ github.event.release.name }}" | sed -e 's/^.*\[\(.*\)\].*$/\1/')
                 echo "Running ./ops/scripts/build.sh --project ${project}"
                 echo "${{ toJson(github.event) }}"

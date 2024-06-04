@@ -2,7 +2,7 @@ name: On Release Workflow
 
 on:
   release:
-    types: [edited]
+    
 
 jobs:
     build:
@@ -18,4 +18,5 @@ jobs:
             - name: Run build script
               run: |
                 echo "Running ./ops/scripts/build.sh --project ${{ github.event.release.tag_name }}"
+                echo "${{ toJson(github.event.release) }}"
 

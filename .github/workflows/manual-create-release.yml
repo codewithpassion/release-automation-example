@@ -59,7 +59,8 @@ jobs:
               id: generate-body
               run: |
                 echo "Generating body"
-                echo "body=Project: ${{ inputs.project }} \nRelease: ${{ steps.create-tag-and-version-name.outputs.version }}" >> $GITHUB_OUTPUT
+                echo -e "Project: ${{ inputs.project }} \nRelease: ${{ steps.create-tag-and-version-name.outputs.version }}" > bodyfile.txt
+                cat bodyfile.txt
 
             - name: Build
               uses: ./.github/workflows/build
@@ -77,7 +78,7 @@ jobs:
                 tag: ${{ steps.create-tag-and-version-name.outputs.version }}
                 name: "[${{ inputs.project }}] ${{ steps.create-tag-and-version-name.outputs.version }}"
                 prerelease: true
-                body: '${{ steps.generate-body.outputs.body }}'                
+                bodyFile: "./bodyfile.txt"
                 artifacts: "./artifact.txt"
 
 

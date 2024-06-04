@@ -6,11 +6,12 @@ on:
 
 permissions: write-all
 
+run-name: Workflow run on PR comment for PR ${{ github.event.issue.number }} by @${{ github.actor }}
 
 jobs:
   pr_commented:
     # This job only runs for pull request comments
-    name: PR comment
+    name: On PR comment
     if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     outputs:

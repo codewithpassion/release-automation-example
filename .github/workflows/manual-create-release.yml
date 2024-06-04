@@ -59,7 +59,7 @@ jobs:
               id: generate-body
               run: |
                 echo "Generating body"
-                echo "body=Project: ${{ inputs.project }} \nRelease: ${{ steps.create-tag-and-version-name.outputs.version }}" >> $GITHUB_OUTPUT
+                echo "'body=Project: ${{ inputs.project }} \nRelease: ${{ steps.create-tag-and-version-name.outputs.version }}'" >> $GITHUB_OUTPUT
 
             - name: Build
               uses: ./.github/workflows/build
